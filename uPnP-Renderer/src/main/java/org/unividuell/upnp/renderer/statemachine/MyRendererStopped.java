@@ -1,0 +1,76 @@
+package org.unividuell.upnp.renderer.statemachine;
+
+import java.net.URI;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.teleal.cling.support.avtransport.impl.state.AbstractState;
+import org.teleal.cling.support.avtransport.impl.state.Stopped;
+import org.teleal.cling.support.model.AVTransport;
+import org.teleal.cling.support.model.SeekMode;
+
+public class MyRendererStopped extends Stopped {
+    
+    final Logger logger = LoggerFactory.getLogger(MyRendererStopped.class);
+
+    public MyRendererStopped(AVTransport transport) {
+        super(transport);
+    }
+
+    public void onEntry() {
+        super.onEntry();
+        logger.info("on entry MyRendererStopped");
+        // Optional: Stop playing, release resources, etc.
+    }
+
+    public void onExit() {
+        logger.info("on exit MyRendererStopped");
+        // Optional: Cleanup etc.
+    }
+
+    @Override
+    public Class<? extends AbstractState> setTransportURI(URI uri, String metaData) {
+        // This operation can be triggered in any state, you should think
+        // about how you'd want your player to react. If we are in Stopped
+        // state nothing much will happen, except that you have to set
+        // the media and position info, just like in MyRendererNoMediaPresent.
+        // However, if this would be the MyRendererPlaying state, would you
+        // prefer stopping first?
+        logger.info("setTransportURI in Stopped with uri '{}'", uri.toString());
+        return MyRendererStopped.class;
+    }
+
+    @Override
+    public Class<? extends AbstractState> stop() {
+        // / Same here, if you are stopped already and someone calls STOP,
+        // well...
+        logger.info("STOP MyRendererStopped");
+        return MyRendererStopped.class;
+    }
+
+    @Override
+    public Class<? extends AbstractState> play(String speed) {
+        // It's easier to let this classes' onEntry() method do the work
+        logger.info("PLAY MyRendererStopped");
+        return MyRendererPlaying.class;
+    }
+
+    @Override
+    public Class<? extends AbstractState> next() {
+        logger.info("NEXT MyRendererStopped");
+        return MyRendererStopped.class;
+    }
+
+    @Override
+    public Class<? extends AbstractState> previous() {
+        logger.info("PREV MyRendererStopped");
+        return MyRendererStopped.class;
+    }
+
+    @Override
+    public Class<? extends AbstractState> seek(SeekMode unit, String target) {
+        // Implement seeking with the stream in stopped state!
+        logger.info("SEEK MyRendererStopped");
+        return MyRendererStopped.class;
+    }
+}
