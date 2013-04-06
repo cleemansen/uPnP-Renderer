@@ -38,7 +38,6 @@ import org.fourthline.cling.support.model.TransportInfo;
 import org.fourthline.cling.support.model.TransportState;
 import org.junit.Before;
 import org.junit.Test;
-import org.unividuell.upnp.renderer.MediaRendererSampleData.AudioRenderingControlService;
 
 public class MediaRendererSampleDataTest {
 

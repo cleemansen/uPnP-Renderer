@@ -70,7 +70,7 @@ public class MyRendererStopped extends Stopped<AVTransport> {
     @Override
     public Class<? extends AbstractState> seek(SeekMode unit, String target) {
         // Implement seeking with the stream in stopped state!
-        logger.info("SEEK MyRendererStopped");
+        logger.info("unit '{}', target '{}', ", unit, target);
         return MyRendererStopped.class;
     }
 }

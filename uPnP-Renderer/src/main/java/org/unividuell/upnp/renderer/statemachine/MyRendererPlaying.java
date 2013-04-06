@@ -30,7 +30,7 @@ public class MyRendererPlaying extends Playing<AVTransport> {
     public Class<? extends AbstractState> setTransportURI(URI uri, String metaData) {
         // Your choice of action here, and what the next state is going to be!
         logger.info("setTransportURI in Playing with uri '{}'", uri.toString());
-        return MyRendererPlaying.class;
+        return MyRendererStopped.class;
     }
 
     @Override
@@ -66,7 +66,7 @@ public class MyRendererPlaying extends Playing<AVTransport> {
 
     @Override
     public Class seek(SeekMode unit, String target) {
-        logger.info("SEEK in Playing with SeekMode '{}' and target '{}'", unit.toString(), target);
+        logger.info("unit '{}', target '{}', ", unit, target);
         return MyRendererPlaying.class;
     }
 

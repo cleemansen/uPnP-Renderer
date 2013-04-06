@@ -2,6 +2,8 @@ package org.unividuell.upnp.renderer;
 
 import org.fourthline.cling.UpnpService;
 import org.fourthline.cling.UpnpServiceImpl;
+import org.fourthline.cling.model.meta.LocalDevice;
+import org.fourthline.cling.support.lastchange.LastChangeAwareServiceManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,8 +32,13 @@ public class MyStarter implements Runnable {
             });
 
             // Add the bound local device to the registry
-            upnpService.getRegistry().addDevice(MediaRendererSampleData.createDevice());
-
+            LocalDevice localDevice = MediaRendererSampleData.createDevice();
+            upnpService.getRegistry().addDevice(localDevice);
+            
+            // Yes, it's a bit awkward to get the LastChange without a controlpoint
+            LastChangeAwareServiceManager manager = (LastChangeAwareServiceManager) localDevice.findServices()[0].getManager();
+            new EventFire(manager).run();
+            
         } catch (Exception ex) {
             System.err.println("Exception occured: " + ex);
             ex.printStackTrace(System.err);

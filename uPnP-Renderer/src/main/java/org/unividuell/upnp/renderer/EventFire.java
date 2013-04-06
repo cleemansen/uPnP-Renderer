@@ -1,6 +1,6 @@
 package org.unividuell.upnp.renderer;
 
-import org.fourthline.cling.support.avtransport.impl.AVTransportService;
+import org.fourthline.cling.support.lastchange.LastChangeAwareServiceManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -8,22 +8,22 @@ public class EventFire implements Runnable {
     
     final Logger logger = LoggerFactory.getLogger(EventFire.class);
     
-    private AVTransportService service;
+    private LastChangeAwareServiceManager manager;
     
-    public EventFire(AVTransportService service) {
-        this.service = service;
+    public EventFire(LastChangeAwareServiceManager manager) {
+        this.manager = manager;
     }
 
     public void run() {
-        logger.debug("FIRE!");
-//        service.fireLastChange();
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        while (true) {
+            logger.debug("FIRE!");
+            manager.fireLastChange();
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
-        
-        new EventFire(service).run();
     }
 
 }

@@ -34,10 +34,9 @@ public class MyRendererNoMediaPresent extends NoMediaPresent<AVTransport> {
         getTransport()
             .getLastChange()
             .setEventedValue(
-                    getTransport()
-                        .getInstanceId(),
-                        new AVTransportVariable.AVTransportURI(uri), 
-                        new AVTransportVariable.CurrentTrackURI(uri));
+                    getTransport().getInstanceId(),
+                    new AVTransportVariable.AVTransportURI(uri), 
+                    new AVTransportVariable.CurrentTrackURI(uri));
 
         return MyRendererStopped.class;
     }
