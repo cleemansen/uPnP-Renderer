@@ -11,7 +11,7 @@ import org.fourthline.cling.support.model.PositionInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class MyRendererNoMediaPresent extends NoMediaPresent {
+public class MyRendererNoMediaPresent extends NoMediaPresent<AVTransport> {
     
     final Logger logger = LoggerFactory.getLogger(MyRendererNoMediaPresent.class);
 

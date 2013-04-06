@@ -22,6 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.unividuell.upnp.renderer.statemachine.MyRendererNoMediaPresent;
 
+@Deprecated
 public class AudioService implements Runnable {
     
     static Logger logger = LoggerFactory.getLogger(AudioService.class);

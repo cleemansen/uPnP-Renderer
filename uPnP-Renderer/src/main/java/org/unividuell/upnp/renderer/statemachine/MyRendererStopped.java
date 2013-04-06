@@ -9,7 +9,7 @@ import org.fourthline.cling.support.model.SeekMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class MyRendererStopped extends Stopped {
+public class MyRendererStopped extends Stopped<AVTransport> {
     
     final Logger logger = LoggerFactory.getLogger(MyRendererStopped.class);
 

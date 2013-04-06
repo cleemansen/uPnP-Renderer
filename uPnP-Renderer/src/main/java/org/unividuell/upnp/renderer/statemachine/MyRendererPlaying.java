@@ -9,7 +9,7 @@ import org.fourthline.cling.support.model.SeekMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class MyRendererPlaying extends Playing {
+public class MyRendererPlaying extends Playing<AVTransport> {
     
     final Logger logger = LoggerFactory.getLogger(MyRendererPlaying.class);
 
@@ -67,7 +67,7 @@ public class MyRendererPlaying extends Playing {
     @Override
     public Class seek(SeekMode unit, String target) {
         logger.info("SEEK in Playing with SeekMode '{}' and target '{}'", unit.toString(), target);
-        return null;
+        return MyRendererPlaying.class;
     }
 
 }
