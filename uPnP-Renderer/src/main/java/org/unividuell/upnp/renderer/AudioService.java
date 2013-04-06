@@ -22,16 +22,19 @@ import org.teleal.cling.model.types.UDN;
 import org.teleal.cling.support.avtransport.impl.AVTransportService;
 import org.unividuell.upnp.renderer.statemachine.MyRendererNoMediaPresent;
 
-public class AudioServer implements Runnable {
+public class AudioService implements Runnable {
     
-    static Logger logger = LoggerFactory.getLogger(AudioServer.class);
+    private static final UDN udn = null;
+    static Logger logger = LoggerFactory.getLogger(AudioService.class);
 
     public static void main(String[] args) throws Exception {
         logger.info("Start a user thread that runs the UPnP stack");
-        Thread serverThread = new Thread(new AudioServer());
+        Thread serverThread = new Thread(new AudioService());
         serverThread.setDaemon(false);
         serverThread.start();
     }
+
+    private final UDN PI_UDN = UDN.uniqueSystemIdentifier("Pi Audio Renderer");
 
     public void run() {
         try {
@@ -57,7 +60,7 @@ public class AudioServer implements Runnable {
 
     LocalDevice createDevice() throws ValidationException, LocalServiceBindingException, IOException {
 
-        DeviceIdentity identity = new DeviceIdentity(UDN.uniqueSystemIdentifier("Pi Audio Renderer"));
+        DeviceIdentity identity = new DeviceIdentity(PI_UDN);
 
         DeviceType type = new UDADeviceType("MediaRenderer", 1);
 
@@ -81,6 +84,9 @@ public class AudioServer implements Runnable {
                 );
             }
         });
+        
+        AVTransportService avTransportService = audioService.getManager().getImplementation();
+        new EventFire(avTransportService).run();
 
         return new LocalDevice(identity, type, details, /* icon, */audioService);
     }

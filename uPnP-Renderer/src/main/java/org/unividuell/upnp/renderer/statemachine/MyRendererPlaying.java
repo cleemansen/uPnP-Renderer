@@ -30,7 +30,7 @@ public class MyRendererPlaying extends Playing {
     public Class<? extends AbstractState> setTransportURI(URI uri, String metaData) {
         // Your choice of action here, and what the next state is going to be!
         logger.info("setTransportURI in Playing with uri '{}'", uri.toString());
-        return MyRendererStopped.class;
+        return MyRendererPlaying.class;
     }
 
     @Override
