@@ -2,12 +2,12 @@ package org.unividuell.upnp.renderer.statemachine;
 
 import java.net.URI;
 
+import org.fourthline.cling.support.avtransport.impl.state.AbstractState;
+import org.fourthline.cling.support.avtransport.impl.state.Stopped;
+import org.fourthline.cling.support.model.AVTransport;
+import org.fourthline.cling.support.model.SeekMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teleal.cling.support.avtransport.impl.state.AbstractState;
-import org.teleal.cling.support.avtransport.impl.state.Stopped;
-import org.teleal.cling.support.model.AVTransport;
-import org.teleal.cling.support.model.SeekMode;
 
 public class MyRendererStopped extends Stopped {
     

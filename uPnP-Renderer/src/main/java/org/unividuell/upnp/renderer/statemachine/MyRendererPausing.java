@@ -2,11 +2,11 @@ package org.unividuell.upnp.renderer.statemachine;
 
 import java.net.URI;
 
+import org.fourthline.cling.support.avtransport.impl.state.AbstractState;
+import org.fourthline.cling.support.avtransport.impl.state.PausedPlay;
+import org.fourthline.cling.support.model.AVTransport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teleal.cling.support.avtransport.impl.state.AbstractState;
-import org.teleal.cling.support.avtransport.impl.state.PausedPlay;
-import org.teleal.cling.support.model.AVTransport;
 
 public class MyRendererPausing extends PausedPlay<AVTransport> {
     

@@ -2,12 +2,12 @@ package org.unividuell.upnp.renderer.statemachine;
 
 import java.net.URI;
 
+import org.fourthline.cling.support.avtransport.impl.state.AbstractState;
+import org.fourthline.cling.support.avtransport.impl.state.Playing;
+import org.fourthline.cling.support.model.AVTransport;
+import org.fourthline.cling.support.model.SeekMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teleal.cling.support.avtransport.impl.state.AbstractState;
-import org.teleal.cling.support.avtransport.impl.state.Playing;
-import org.teleal.cling.support.model.AVTransport;
-import org.teleal.cling.support.model.SeekMode;
 
 public class MyRendererPlaying extends Playing {
     
@@ -43,13 +43,13 @@ public class MyRendererPlaying extends Playing {
     @Override
     public Class play(String speed) {
         logger.info("PLAY in Playing");
-        return null;
+        return MyRendererPlaying.class;
     }
 
     @Override
     public Class pause() {
         logger.info("PAUSE in Playing");
-        return null;
+        return MyRendererPausing.class;
     }
 
     @Override

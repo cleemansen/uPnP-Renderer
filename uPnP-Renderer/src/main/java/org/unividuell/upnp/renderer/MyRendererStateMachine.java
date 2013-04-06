@@ -1,7 +1,7 @@
 package org.unividuell.upnp.renderer;
 
-import org.teleal.cling.support.avtransport.impl.AVTransportStateMachine;
-import org.teleal.common.statemachine.States;
+import org.fourthline.cling.support.avtransport.impl.AVTransportStateMachine;
+import org.seamless.statemachine.States;
 import org.unividuell.upnp.renderer.statemachine.MyRendererNoMediaPresent;
 import org.unividuell.upnp.renderer.statemachine.MyRendererPausing;
 import org.unividuell.upnp.renderer.statemachine.MyRendererPlaying;

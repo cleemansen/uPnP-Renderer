@@ -2,39 +2,42 @@ package org.unividuell.upnp.renderer;
 
 import java.io.IOException;
 
+import org.fourthline.cling.UpnpService;
+import org.fourthline.cling.UpnpServiceImpl;
+import org.fourthline.cling.binding.LocalServiceBindingException;
+import org.fourthline.cling.binding.annotations.AnnotationLocalServiceBinder;
+import org.fourthline.cling.model.DefaultServiceManager;
+import org.fourthline.cling.model.ValidationException;
+import org.fourthline.cling.model.meta.DeviceDetails;
+import org.fourthline.cling.model.meta.DeviceIdentity;
+import org.fourthline.cling.model.meta.LocalDevice;
+import org.fourthline.cling.model.meta.LocalService;
+import org.fourthline.cling.model.meta.ManufacturerDetails;
+import org.fourthline.cling.model.meta.ModelDetails;
+import org.fourthline.cling.model.types.DeviceType;
+import org.fourthline.cling.model.types.UDADeviceType;
+import org.fourthline.cling.model.types.UDN;
+import org.fourthline.cling.support.avtransport.impl.AVTransportService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.teleal.cling.UpnpService;
-import org.teleal.cling.UpnpServiceImpl;
-import org.teleal.cling.binding.LocalServiceBindingException;
-import org.teleal.cling.binding.annotations.AnnotationLocalServiceBinder;
-import org.teleal.cling.model.DefaultServiceManager;
-import org.teleal.cling.model.ValidationException;
-import org.teleal.cling.model.meta.DeviceDetails;
-import org.teleal.cling.model.meta.DeviceIdentity;
-import org.teleal.cling.model.meta.LocalDevice;
-import org.teleal.cling.model.meta.LocalService;
-import org.teleal.cling.model.meta.ManufacturerDetails;
-import org.teleal.cling.model.meta.ModelDetails;
-import org.teleal.cling.model.types.DeviceType;
-import org.teleal.cling.model.types.UDADeviceType;
-import org.teleal.cling.model.types.UDN;
-import org.teleal.cling.support.avtransport.impl.AVTransportService;
 import org.unividuell.upnp.renderer.statemachine.MyRendererNoMediaPresent;
 
 public class AudioService implements Runnable {
     
-    private static final UDN udn = null;
     static Logger logger = LoggerFactory.getLogger(AudioService.class);
 
+    private final UDN PI_UDN = UDN.uniqueSystemIdentifier("Pi Audio Renderer");
+    
+    public AVTransportService avTransportService;
+
+    public LocalDevice localDevice;
+    
     public static void main(String[] args) throws Exception {
         logger.info("Start a user thread that runs the UPnP stack");
         Thread serverThread = new Thread(new AudioService());
         serverThread.setDaemon(false);
         serverThread.start();
     }
-
-    private final UDN PI_UDN = UDN.uniqueSystemIdentifier("Pi Audio Renderer");
 
     public void run() {
         try {
@@ -58,7 +61,7 @@ public class AudioService implements Runnable {
         }
     }
 
-    LocalDevice createDevice() throws ValidationException, LocalServiceBindingException, IOException {
+    public LocalDevice createDevice() throws ValidationException, LocalServiceBindingException, IOException {
 
         DeviceIdentity identity = new DeviceIdentity(PI_UDN);
 
@@ -85,10 +88,10 @@ public class AudioService implements Runnable {
             }
         });
         
-        AVTransportService avTransportService = audioService.getManager().getImplementation();
-        new EventFire(avTransportService).run();
-
-        return new LocalDevice(identity, type, details, /* icon, */audioService);
+        this.avTransportService = audioService.getManager().getImplementation();
+//        new EventFire(avTransportService).run();
+        localDevice = new LocalDevice(identity, type, details, /* icon, */audioService);
+        return localDevice;
     }
 
 }
