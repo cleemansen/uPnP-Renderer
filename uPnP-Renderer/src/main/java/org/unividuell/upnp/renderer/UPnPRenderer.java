@@ -14,34 +14,25 @@
  */
 package org.unividuell.upnp.renderer;
 
-import org.fourthline.cling.binding.annotations.AnnotationLocalServiceBinder;
-import org.fourthline.cling.model.meta.DeviceDetails;
-import org.fourthline.cling.model.meta.DeviceIdentity;
-import org.fourthline.cling.model.meta.LocalDevice;
-import org.fourthline.cling.model.meta.LocalService;
-import org.fourthline.cling.model.types.UDADeviceType;
-import org.fourthline.cling.model.types.UDN;
-import org.fourthline.cling.support.avtransport.impl.AVTransportService;
-import org.fourthline.cling.support.avtransport.lastchange.AVTransportLastChangeParser;
-import org.fourthline.cling.support.lastchange.LastChangeAwareServiceManager;
-import org.fourthline.cling.support.lastchange.LastChangeParser;
-import org.fourthline.cling.support.renderingcontrol.lastchange.RenderingControlLastChangeParser;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.unividuell.upnp.renderer.service.MPlayerAVTransportService;
-import org.unividuell.upnp.renderer.statemachine.MyRendererNoMediaPresent;
+import org.fourthline.cling.binding.annotations.*;
+import org.fourthline.cling.model.meta.*;
+import org.fourthline.cling.model.types.*;
+import org.fourthline.cling.support.avtransport.impl.*;
+import org.fourthline.cling.support.avtransport.lastchange.*;
+import org.fourthline.cling.support.lastchange.*;
+import org.fourthline.cling.support.renderingcontrol.lastchange.*;
+import org.slf4j.*;
+import org.unividuell.upnp.renderer.service.*;
+import org.unividuell.upnp.renderer.statemachine.*;
 
 /**
- * @author Christian Bauer
  */
-public class MediaRendererSampleData {
+public class UPnPRenderer {
     
-    final Logger logger = LoggerFactory.getLogger(MediaRendererSampleData.class);
+    final Logger logger = LoggerFactory.getLogger(UPnPRenderer.class);
 
     public static LocalService<AVTransportService> createAVTransportService() throws Exception {
 
-//        LocalService<AVTransportService> service = 
-//                new AnnotationLocalServiceBinder().read(AVTransportService.class);
         LocalService<AVTransportService> service = 
                 new AnnotationLocalServiceBinder().read(MPlayerAVTransportService.class);
 
@@ -82,9 +73,9 @@ public class MediaRendererSampleData {
 
     public static LocalDevice createDevice() throws Exception {
         return new LocalDevice(
-                new DeviceIdentity(new UDN("1111")),
+                new DeviceIdentity(UDN.uniqueSystemIdentifier("uPnP JLaLa")),
                 new UDADeviceType("MediaRenderer"),
-                new DeviceDetails("My MediaRenderer"),
+                new DeviceDetails("uPnP JLaLa"),
                 new LocalService[]{
                         createAVTransportService(),
                         createRenderingControlService()

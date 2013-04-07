@@ -1,15 +1,11 @@
 package org.unividuell.upnp.renderer.statemachine;
 
-import java.net.URI;
+import java.net.*;
 
-import org.fourthline.cling.support.avtransport.impl.state.AbstractState;
-import org.fourthline.cling.support.avtransport.impl.state.NoMediaPresent;
-import org.fourthline.cling.support.avtransport.lastchange.AVTransportVariable;
-import org.fourthline.cling.support.model.AVTransport;
-import org.fourthline.cling.support.model.MediaInfo;
-import org.fourthline.cling.support.model.PositionInfo;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.fourthline.cling.support.avtransport.impl.state.*;
+import org.fourthline.cling.support.avtransport.lastchange.*;
+import org.fourthline.cling.support.model.*;
+import org.slf4j.*;
 
 public class MyRendererNoMediaPresent extends NoMediaPresent<AVTransport> {
     

@@ -32,7 +32,7 @@ public class MyStarter implements Runnable {
             });
 
             // Add the bound local device to the registry
-            LocalDevice localDevice = MediaRendererSampleData.createDevice();
+            LocalDevice localDevice = UPnPRenderer.createDevice();
             upnpService.getRegistry().addDevice(localDevice);
             
             // Yes, it's a bit awkward to get the LastChange without a controlpoint

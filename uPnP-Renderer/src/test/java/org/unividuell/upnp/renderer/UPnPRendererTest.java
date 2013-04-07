@@ -1,45 +1,31 @@
 package org.unividuell.upnp.renderer;
 
 import static org.fest.assertions.Assertions.assertThat;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
-import java.net.URI;
-import java.util.Arrays;
-import java.util.List;
+import java.beans.*;
+import java.net.*;
+import java.util.*;
 
-import org.fest.assertions.Fail;
-import org.fourthline.cling.controlpoint.ActionCallback;
-import org.fourthline.cling.model.action.ActionInvocation;
-import org.fourthline.cling.model.message.UpnpResponse;
-import org.fourthline.cling.model.meta.LocalService;
-import org.fourthline.cling.support.avtransport.callback.GetCurrentTransportActions;
-import org.fourthline.cling.support.avtransport.callback.GetDeviceCapabilities;
-import org.fourthline.cling.support.avtransport.callback.GetMediaInfo;
-import org.fourthline.cling.support.avtransport.callback.GetPositionInfo;
-import org.fourthline.cling.support.avtransport.callback.GetTransportInfo;
-import org.fourthline.cling.support.avtransport.callback.Pause;
-import org.fourthline.cling.support.avtransport.callback.Play;
-import org.fourthline.cling.support.avtransport.callback.Seek;
-import org.fourthline.cling.support.avtransport.callback.SetAVTransportURI;
-import org.fourthline.cling.support.avtransport.callback.Stop;
-import org.fourthline.cling.support.avtransport.impl.AVTransportService;
-import org.fourthline.cling.support.avtransport.lastchange.AVTransportLastChangeParser;
-import org.fourthline.cling.support.avtransport.lastchange.AVTransportVariable;
-import org.fourthline.cling.support.lastchange.LastChange;
-import org.fourthline.cling.support.lastchange.LastChangeAwareServiceManager;
-import org.fourthline.cling.support.model.DeviceCapabilities;
-import org.fourthline.cling.support.model.MediaInfo;
-import org.fourthline.cling.support.model.PositionInfo;
-import org.fourthline.cling.support.model.SeekMode;
-import org.fourthline.cling.support.model.TransportAction;
-import org.fourthline.cling.support.model.TransportInfo;
-import org.fourthline.cling.support.model.TransportState;
-import org.junit.Before;
-import org.junit.Test;
+import org.fest.assertions.*;
+import org.fourthline.cling.controlpoint.*;
+import org.fourthline.cling.model.action.*;
+import org.fourthline.cling.model.message.*;
+import org.fourthline.cling.model.meta.*;
+import org.fourthline.cling.support.avtransport.callback.*;
+import org.fourthline.cling.support.avtransport.impl.*;
+import org.fourthline.cling.support.avtransport.lastchange.*;
+import org.fourthline.cling.support.lastchange.*;
+import org.fourthline.cling.support.model.*;
+import org.junit.*;
+import org.junit.runner.*;
+import org.mockito.*;
+import org.mockito.runners.*;
+import org.unividuell.jlala.*;
 
-public class MediaRendererSampleDataTest {
+@RunWith(MockitoJUnitRunner.class)
+public class UPnPRendererTest {
 
     LocalService<AVTransportService> service;
     LocalService<AudioRenderingControlService> createRenderingControlService;
@@ -47,15 +33,22 @@ public class MediaRendererSampleDataTest {
     final String[] lcValue = new String[1];
 
     LastChangeAwareServiceManager manager;
-
+    
+    @Mock
+    Player mockPlayer;
+    
     @Before
     public void setup() throws Throwable {
-        service = MediaRendererSampleData.createAVTransportService();
-        createRenderingControlService = MediaRendererSampleData.createRenderingControlService();
-
+        service = UPnPRenderer.createAVTransportService();
+        createRenderingControlService = UPnPRenderer.createRenderingControlService();
+        
+        // Mock
+        PlayerBeanHolder.getInstance().setPlayer(mockPlayer);
+        
         // Yes, it's a bit awkward to get the LastChange without a controlpoint
         PropertyChangeSupport pcs = service.getManager().getPropertyChangeSupport();
         pcs.addPropertyChangeListener(new PropertyChangeListener() {
+            @Override
             public void propertyChange(PropertyChangeEvent ev) {
                 if (ev.getPropertyName().equals("LastChange"))
                     lcValue[0] = (String) ev.getNewValue();
@@ -67,10 +60,13 @@ public class MediaRendererSampleDataTest {
                 "NO METADATA") {
             @Override
             public void failure(ActionInvocation invocation, UpnpResponse operation, String defaultMsg) {
-                Fail.fail("Something was wrong!");
+                
+                Fail.fail("Something was wrong! " + defaultMsg);
             }
         };
         setAVTransportURIAction.run();
+        // we start in stop mode after setting the uri.
+        verify(mockPlayer).stop();
 
         manager = (LastChangeAwareServiceManager) service.getManager();
         manager.fireLastChange();
@@ -196,6 +192,9 @@ public class MediaRendererSampleDataTest {
         LastChange lastChange = new LastChange(new AVTransportLastChangeParser(), lastChangeString);
         assertThat(lastChange.getEventedValue(0, AVTransportVariable.TransportState.class).getValue()).isEqualTo(
                 TransportState.PLAYING);
+        
+        // verify
+        verify(mockPlayer).play();
     }
 
     @Test
@@ -220,6 +219,7 @@ public class MediaRendererSampleDataTest {
         // verify
         assertThat(lastChange.getEventedValue(0, AVTransportVariable.TransportState.class).getValue()).isEqualTo(
                 TransportState.STOPPED);
+        verify(mockPlayer).stop();
     }
 
     @Test
@@ -251,6 +251,10 @@ public class MediaRendererSampleDataTest {
         // verify
         assertThat(lastChange.getEventedValue(0, AVTransportVariable.TransportState.class).getValue()).isEqualTo(
                 TransportState.PAUSED_PLAYBACK);
+        
+        verify(mockPlayer).play();
+        verify(mockPlayer).pause();
+        verifyNoMoreInteractions(mockPlayer);
     }
 
     @Test
@@ -282,6 +286,10 @@ public class MediaRendererSampleDataTest {
         // verify
         assertThat(lastChange.getEventedValue(0, AVTransportVariable.TransportState.class).getValue()).isEqualTo(
                 TransportState.STOPPED);
+        
+        verify(mockPlayer).play();
+        verify(mockPlayer).stop();
+        verifyNoMoreInteractions(mockPlayer);
     }
     
     @Test
@@ -314,6 +322,9 @@ public class MediaRendererSampleDataTest {
         // verify
         assertThat(lastChange.getEventedValue(0, AVTransportVariable.TransportState.class).getValue()).isEqualTo(
                 TransportState.PLAYING);
+//        verify(mockPlayer).play();
+//        verify(mockPlayer).stop();
+//        verifyNoMoreInteractions(mockPlayer);
     }
 
     @Test

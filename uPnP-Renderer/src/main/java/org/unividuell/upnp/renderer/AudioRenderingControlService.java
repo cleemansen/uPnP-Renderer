@@ -1,12 +1,9 @@
 package org.unividuell.upnp.renderer;
 
-import org.fourthline.cling.model.types.UnsignedIntegerFourBytes;
-import org.fourthline.cling.model.types.UnsignedIntegerTwoBytes;
-import org.fourthline.cling.support.model.Channel;
-import org.fourthline.cling.support.renderingcontrol.AbstractAudioRenderingControl;
-import org.fourthline.cling.support.renderingcontrol.RenderingControlException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.fourthline.cling.model.types.*;
+import org.fourthline.cling.support.model.*;
+import org.fourthline.cling.support.renderingcontrol.*;
+import org.slf4j.*;
 
 public class AudioRenderingControlService extends AbstractAudioRenderingControl {
 
@@ -25,12 +22,14 @@ public class AudioRenderingControlService extends AbstractAudioRenderingControl 
 
     @Override
     public UnsignedIntegerTwoBytes getVolume(UnsignedIntegerFourBytes instanceId, String channelName) throws RenderingControlException {
+//        return new UnsignedIntegerTwoBytes(PlayerBeanHolder.getInstance().getPlayer().getVolume());
         return new UnsignedIntegerTwoBytes(50);
     }
 
     @Override
     public void setVolume(UnsignedIntegerFourBytes instanceId, String channelName, UnsignedIntegerTwoBytes desiredVolume) throws RenderingControlException {
         logger.info("instanceId '{}', channelName '{}', desiredVolume '{}'", instanceId, channelName, desiredVolume);
+        PlayerBeanHolder.getInstance().getPlayer().setVolume(desiredVolume.getValue());
     }
 
     @Override

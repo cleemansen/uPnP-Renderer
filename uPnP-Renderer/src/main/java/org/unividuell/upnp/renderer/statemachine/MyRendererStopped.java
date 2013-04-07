@@ -1,13 +1,11 @@
 package org.unividuell.upnp.renderer.statemachine;
 
-import java.net.URI;
+import java.net.*;
 
-import org.fourthline.cling.support.avtransport.impl.state.AbstractState;
-import org.fourthline.cling.support.avtransport.impl.state.Stopped;
-import org.fourthline.cling.support.model.AVTransport;
-import org.fourthline.cling.support.model.SeekMode;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.fourthline.cling.support.avtransport.impl.state.*;
+import org.fourthline.cling.support.model.*;
+import org.slf4j.*;
+import org.unividuell.upnp.renderer.*;
 
 public class MyRendererStopped extends Stopped<AVTransport> {
     
@@ -17,10 +15,12 @@ public class MyRendererStopped extends Stopped<AVTransport> {
         super(transport);
     }
 
+    @Override
     public void onEntry() {
         super.onEntry();
-        logger.info("on entry MyRendererStopped");
+//        logger.info("on entry MyRendererStopped");
         // Optional: Stop playing, release resources, etc.
+        PlayerBeanHolder.getInstance().getPlayer().stop();
     }
 
     public void onExit() {
@@ -44,26 +44,26 @@ public class MyRendererStopped extends Stopped<AVTransport> {
     public Class<? extends AbstractState> stop() {
         // / Same here, if you are stopped already and someone calls STOP,
         // well...
-        logger.info("STOP MyRendererStopped");
+//        logger.info("STOP MyRendererStopped");
         return MyRendererStopped.class;
     }
 
     @Override
     public Class<? extends AbstractState> play(String speed) {
         // It's easier to let this classes' onEntry() method do the work
-        logger.info("PLAY MyRendererStopped");
+//        logger.info("PLAY MyRendererStopped");
         return MyRendererPlaying.class;
     }
 
     @Override
     public Class<? extends AbstractState> next() {
-        logger.info("NEXT MyRendererStopped");
+//        logger.info("NEXT MyRendererStopped");
         return MyRendererStopped.class;
     }
 
     @Override
     public Class<? extends AbstractState> previous() {
-        logger.info("PREV MyRendererStopped");
+//        logger.info("PREV MyRendererStopped");
         return MyRendererStopped.class;
     }
 

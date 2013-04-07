@@ -1,12 +1,11 @@
 package org.unividuell.upnp.renderer.statemachine;
 
-import java.net.URI;
+import java.net.*;
 
-import org.fourthline.cling.support.avtransport.impl.state.AbstractState;
-import org.fourthline.cling.support.avtransport.impl.state.PausedPlay;
-import org.fourthline.cling.support.model.AVTransport;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.fourthline.cling.support.avtransport.impl.state.*;
+import org.fourthline.cling.support.model.*;
+import org.slf4j.*;
+import org.unividuell.upnp.renderer.*;
 
 public class MyRendererPausing extends PausedPlay<AVTransport> {
     
@@ -14,6 +13,12 @@ public class MyRendererPausing extends PausedPlay<AVTransport> {
 
     public MyRendererPausing(AVTransport transport) {
         super(transport);
+    }
+    
+    @Override
+    public void onEntry() {
+        super.onEntry();
+        PlayerBeanHolder.getInstance().getPlayer().pause();
     }
 
     @Override
