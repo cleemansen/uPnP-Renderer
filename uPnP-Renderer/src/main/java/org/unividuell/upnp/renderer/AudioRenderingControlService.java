@@ -22,8 +22,9 @@ public class AudioRenderingControlService extends AbstractAudioRenderingControl 
 
     @Override
     public UnsignedIntegerTwoBytes getVolume(UnsignedIntegerFourBytes instanceId, String channelName) throws RenderingControlException {
-//        return new UnsignedIntegerTwoBytes(PlayerBeanHolder.getInstance().getPlayer().getVolume());
-        return new UnsignedIntegerTwoBytes(50);
+        long currentVol = PlayerBeanHolder.getInstance().getPlayer().getVolume();
+        logger.info("current vol is '{}'", currentVol);
+        return new UnsignedIntegerTwoBytes(currentVol);
     }
 
     @Override
