@@ -9,7 +9,12 @@ public class PlayerBeanHolder {
     private Player mplayer;
     
     private PlayerBeanHolder() {
-    
+        if (mplayer == null) {
+            // default
+            mplayer = PlayerFactory.getInstance().getMPlayer();
+            // dummy
+//            mplayer = new DummyPlayer();
+        }
     }
     
     public static PlayerBeanHolder getInstance() {
@@ -17,10 +22,6 @@ public class PlayerBeanHolder {
     }
     
     public Player getPlayer() {
-        if (mplayer == null) {
-            // default
-            mplayer = PlayerFactory.getInstance().getMPlayer();
-        }
         return mplayer;
     }
 
