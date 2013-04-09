@@ -6,6 +6,7 @@ import org.fourthline.cling.support.avtransport.*;
 import org.fourthline.cling.support.avtransport.impl.*;
 import org.fourthline.cling.support.model.*;
 import org.slf4j.*;
+import org.unividuell.upnp.renderer.*;
 
 public class MPlayerAVTransportService extends AVTransportService {
     
@@ -21,8 +22,13 @@ public class MPlayerAVTransportService extends AVTransportService {
     @Override
     public PositionInfo getPositionInfo(UnsignedIntegerFourBytes instanceId) throws AVTransportException {
         logger.info("instanceId '{}', ", instanceId);
+        
+        String mediaDuration = getMediaInfo(instanceId).getMediaDuration();
+        String currentURI = getMediaInfo(instanceId).getCurrentURI();
+        
+        long crntPos = PlayerBeanHolder.getInstance().getPlayer().getTrackPosition();
         // long track, String trackDuration, String trackURI, String relTime, String absTime
-        PositionInfo info = new PositionInfo(0, ModelUtil.toTimeString(226), "a uri", ModelUtil.toTimeString(++cnt), ModelUtil.toTimeString(cnt));
+        PositionInfo info = new PositionInfo(0, mediaDuration, currentURI, ModelUtil.toTimeString(crntPos), ModelUtil.toTimeString(crntPos));
         logger.info("abs time '{}', total '{}'",
                 info.getAbsTime(),
                 info.getTrackDurationSeconds());
