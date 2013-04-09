@@ -15,12 +15,6 @@ public class DummyPlayer implements Player {
     }
 
     @Override
-    public void play() {
-        logger.info("play: ");
-
-    }
-
-    @Override
     public void togglePause() {
 
         logger.info("togglePause: ");
@@ -76,7 +70,7 @@ public class DummyPlayer implements Player {
     }
 
     @Override
-    public void loadFile(String uri, boolean appendToPlaylist) throws IOException {
+    public void loadAndPlay(String uri, boolean appendToPlaylist) throws IOException {
         logger.info("loadFile: " + "uri '{}', appendToPlaylist '{}', ", uri, appendToPlaylist);
 
     }

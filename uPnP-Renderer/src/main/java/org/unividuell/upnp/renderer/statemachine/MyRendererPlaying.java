@@ -27,7 +27,7 @@ public class MyRendererPlaying extends Playing<AVTransport> {
         String currentURI = getTransport().getMediaInfo().getCurrentURI();
         if (loadNewFile) {
             try {
-                PlayerBeanHolder.getInstance().getPlayer().loadFile(currentURI, false);
+                PlayerBeanHolder.getInstance().getPlayer().loadAndPlay(currentURI, false);
             } catch (IOException e) {
                 logger.error("couldn't load file '{}'.", currentURI, e);
             }

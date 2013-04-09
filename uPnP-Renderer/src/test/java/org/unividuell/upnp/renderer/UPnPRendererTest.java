@@ -1,28 +1,49 @@
 package org.unividuell.upnp.renderer;
 
-import static org.fest.assertions.Assertions.assertThat;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.fest.assertions.Assertions.*;
+import static org.mockito.Matchers.*;
+import static org.mockito.Mockito.*;
 
-import java.beans.*;
-import java.net.*;
-import java.util.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
+import java.net.URI;
+import java.util.Arrays;
+import java.util.List;
 
-import org.fest.assertions.*;
-import org.fourthline.cling.controlpoint.*;
-import org.fourthline.cling.model.action.*;
-import org.fourthline.cling.model.message.*;
-import org.fourthline.cling.model.meta.*;
-import org.fourthline.cling.support.avtransport.callback.*;
-import org.fourthline.cling.support.avtransport.impl.*;
-import org.fourthline.cling.support.avtransport.lastchange.*;
-import org.fourthline.cling.support.lastchange.*;
-import org.fourthline.cling.support.model.*;
-import org.junit.*;
-import org.junit.runner.*;
-import org.mockito.*;
-import org.mockito.runners.*;
-import org.unividuell.jlala.*;
+import org.fest.assertions.Fail;
+import org.fourthline.cling.controlpoint.ActionCallback;
+import org.fourthline.cling.model.action.ActionInvocation;
+import org.fourthline.cling.model.message.UpnpResponse;
+import org.fourthline.cling.model.meta.LocalService;
+import org.fourthline.cling.support.avtransport.callback.GetCurrentTransportActions;
+import org.fourthline.cling.support.avtransport.callback.GetDeviceCapabilities;
+import org.fourthline.cling.support.avtransport.callback.GetMediaInfo;
+import org.fourthline.cling.support.avtransport.callback.GetPositionInfo;
+import org.fourthline.cling.support.avtransport.callback.GetTransportInfo;
+import org.fourthline.cling.support.avtransport.callback.Pause;
+import org.fourthline.cling.support.avtransport.callback.Play;
+import org.fourthline.cling.support.avtransport.callback.Seek;
+import org.fourthline.cling.support.avtransport.callback.SetAVTransportURI;
+import org.fourthline.cling.support.avtransport.callback.Stop;
+import org.fourthline.cling.support.avtransport.impl.AVTransportService;
+import org.fourthline.cling.support.avtransport.lastchange.AVTransportLastChangeParser;
+import org.fourthline.cling.support.avtransport.lastchange.AVTransportVariable;
+import org.fourthline.cling.support.lastchange.LastChange;
+import org.fourthline.cling.support.lastchange.LastChangeAwareServiceManager;
+import org.fourthline.cling.support.model.DeviceCapabilities;
+import org.fourthline.cling.support.model.MediaInfo;
+import org.fourthline.cling.support.model.PositionInfo;
+import org.fourthline.cling.support.model.SeekMode;
+import org.fourthline.cling.support.model.TransportAction;
+import org.fourthline.cling.support.model.TransportInfo;
+import org.fourthline.cling.support.model.TransportState;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
+import org.unividuell.jlala.Player;
 
 @RunWith(MockitoJUnitRunner.class)
 public class UPnPRendererTest {
@@ -128,7 +149,7 @@ public class UPnPRendererTest {
             @Override
             public void received(ActionInvocation invocation, PositionInfo positionInfo) {
                 assertThat(positionInfo.getTrackURI()).isEqualTo("http://10.0.0.1/file.mp3");
-                assertThat(positionInfo.getTrackMetaData()).isEqualTo("NO METADATA");
+                assertThat(positionInfo.getTrackMetaData()).isEqualTo("NOT_IMPLEMENTED");
             }
 
             @Override
@@ -194,7 +215,7 @@ public class UPnPRendererTest {
                 TransportState.PLAYING);
         
         // verify
-        verify(mockPlayer).play();
+        verify(mockPlayer).loadAndPlay(anyString(), anyBoolean());
     }
 
     @Test
@@ -252,7 +273,8 @@ public class UPnPRendererTest {
         assertThat(lastChange.getEventedValue(0, AVTransportVariable.TransportState.class).getValue()).isEqualTo(
                 TransportState.PAUSED_PLAYBACK);
         
-        verify(mockPlayer).play();
+        verify(mockPlayer).stop();
+        verify(mockPlayer).loadAndPlay(anyString(), anyBoolean());
         verify(mockPlayer).pause();
         verifyNoMoreInteractions(mockPlayer);
     }
@@ -287,8 +309,8 @@ public class UPnPRendererTest {
         assertThat(lastChange.getEventedValue(0, AVTransportVariable.TransportState.class).getValue()).isEqualTo(
                 TransportState.STOPPED);
         
-        verify(mockPlayer).play();
-        verify(mockPlayer).stop();
+        verify(mockPlayer, times(2)).stop();
+        verify(mockPlayer).loadAndPlay(anyString(), anyBoolean());
         verifyNoMoreInteractions(mockPlayer);
     }
     
