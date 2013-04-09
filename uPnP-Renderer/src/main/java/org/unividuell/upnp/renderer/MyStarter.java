@@ -1,11 +1,9 @@
 package org.unividuell.upnp.renderer;
 
-import org.fourthline.cling.UpnpService;
-import org.fourthline.cling.UpnpServiceImpl;
-import org.fourthline.cling.model.meta.LocalDevice;
-import org.fourthline.cling.support.lastchange.LastChangeAwareServiceManager;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.fourthline.cling.*;
+import org.fourthline.cling.model.meta.*;
+import org.fourthline.cling.support.lastchange.*;
+import org.slf4j.*;
 
 public class MyStarter implements Runnable {
     
@@ -21,12 +19,12 @@ public class MyStarter implements Runnable {
     @Override
     public void run() {
         try {
-
             final UpnpService upnpService = new UpnpServiceImpl();
 
             Runtime.getRuntime().addShutdownHook(new Thread() {
                 @Override
                 public void run() {
+                    PlayerBeanHolder.getInstance().getPlayer().close();
                     upnpService.shutdown();
                 }
             });
