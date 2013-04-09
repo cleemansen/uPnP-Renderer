@@ -24,7 +24,7 @@ public class MyRendererPausing extends PausedPlay<AVTransport> {
     @Override
     public Class<? extends AbstractState> setTransportURI(URI uri, String metaData) {
         logger.info("uri '{}'", uri.toString());
-        return MyRendererPausing.class;
+        return MyRendererStopped.class;
     }
 
     @Override

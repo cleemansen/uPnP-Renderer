@@ -13,8 +13,8 @@ public class MyRendererPlaying extends Playing<AVTransport> {
     
     final Logger logger = LoggerFactory.getLogger(MyRendererPlaying.class);
     
-    /** signals that we left the playing state into pause mode. */
-    private boolean leftStateIntoPauseMode = false;
+    /** signals  */
+    private boolean loadNewFile = true;
 
     public MyRendererPlaying(AVTransport transport) {
         super(transport);
@@ -25,7 +25,7 @@ public class MyRendererPlaying extends Playing<AVTransport> {
         super.onEntry();
         // Start playing now!
         String currentURI = getTransport().getMediaInfo().getCurrentURI();
-        if (! leftStateIntoPauseMode) {
+        if (loadNewFile) {
             try {
                 PlayerBeanHolder.getInstance().getPlayer().loadFile(currentURI, false);
             } catch (IOException e) {
@@ -63,7 +63,7 @@ public class MyRendererPlaying extends Playing<AVTransport> {
     public Class<? extends AbstractState> stop() {
         // Stop playing!
 //        logger.info("STOP in Playing");
-        leftStateIntoPauseMode = false;
+        loadNewFile = true;
         return MyRendererStopped.class;
     }
 
@@ -76,7 +76,7 @@ public class MyRendererPlaying extends Playing<AVTransport> {
     @Override
     public Class pause() {
         logger.info("PAUSE in Playing");
-        leftStateIntoPauseMode = true;
+        loadNewFile = false;
         return MyRendererPausing.class;
     }
 
