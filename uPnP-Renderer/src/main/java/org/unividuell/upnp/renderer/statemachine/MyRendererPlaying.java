@@ -12,6 +12,9 @@ import org.unividuell.upnp.renderer.*;
 public class MyRendererPlaying extends Playing<AVTransport> {
     
     final Logger logger = LoggerFactory.getLogger(MyRendererPlaying.class);
+    
+    /** signals that we left the playing state into pause mode. */
+    private boolean leftStateIntoPauseMode = false;
 
     public MyRendererPlaying(AVTransport transport) {
         super(transport);
@@ -22,12 +25,15 @@ public class MyRendererPlaying extends Playing<AVTransport> {
         super.onEntry();
         // Start playing now!
         String currentURI = getTransport().getMediaInfo().getCurrentURI();
-        try {
-            PlayerBeanHolder.getInstance().getPlayer().loadFile(currentURI, false);
-        } catch (IOException e) {
-            logger.error("couldn't load file '{}'.", currentURI, e);
+        if (! leftStateIntoPauseMode) {
+            try {
+                PlayerBeanHolder.getInstance().getPlayer().loadFile(currentURI, false);
+            } catch (IOException e) {
+                logger.error("couldn't load file '{}'.", currentURI, e);
+            }
+        } else {
+            PlayerBeanHolder.getInstance().getPlayer().pause();
         }
-        PlayerBeanHolder.getInstance().getPlayer().play();
     }
 
     @Override
@@ -57,18 +63,20 @@ public class MyRendererPlaying extends Playing<AVTransport> {
     public Class<? extends AbstractState> stop() {
         // Stop playing!
 //        logger.info("STOP in Playing");
+        leftStateIntoPauseMode = false;
         return MyRendererStopped.class;
     }
 
     @Override
     public Class play(String speed) {
-//        logger.info("PLAY in Playing");
+        logger.info("PLAY in Playing");
         return MyRendererPlaying.class;
     }
 
     @Override
     public Class pause() {
-//        logger.info("PAUSE in Playing");
+        logger.info("PAUSE in Playing");
+        leftStateIntoPauseMode = true;
         return MyRendererPausing.class;
     }
 
