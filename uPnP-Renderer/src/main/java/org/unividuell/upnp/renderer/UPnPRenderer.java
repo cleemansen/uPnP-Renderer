@@ -49,6 +49,10 @@ public class UPnPRenderer {
                                 MyRendererNoMediaPresent.class  // Initial state
                         );
                     }
+                    @Override
+                    protected int getLockTimeoutMillis() {
+                        return 1500;
+                    };
                 }
         );
         return service;
@@ -68,6 +72,7 @@ public class UPnPRenderer {
                         lastChangeParser
                 )
         );
+        
         return service;
     }
 
